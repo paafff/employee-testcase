@@ -1,0 +1,79 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id        String   @id @default(uuid())
+  email     String   @unique
+  password  String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  role      RoleEnum @default(USER)
+  biodata   Biodata?
+}
+
+model Biodata {
+  id                 String              @id
+  user               User                @relation(fields: [id], references: [id])
+  positionApplied    String?
+  fullName           String?
+  gender             GenderEnum          @default(UNKNOWN)
+  birthDetails       String?
+  address            String?
+  phone              String?
+  email              String?
+  pendidikanTerakhir PendidikanTerakhir?
+  riwayatPelatihan   RiwayatPelatihan[]
+  riwayatPekerjaan   RiwayatPekerjaan[]
+}
+
+model PendidikanTerakhir {
+  id             Int     @id @default(autoincrement())
+  name           String?
+  educationLevel String?
+  major          String?
+  graduationYear Int?
+  biodataId      String  @unique
+  biodata        Biodata @relation(fields: [biodataId], references: [id])
+}
+
+model RiwayatPelatihan {
+  id          Int     @id @default(autoincrement())
+  name        String?
+  certificate String?
+  year        Int?
+  biodataId   String
+  biodata     Biodata @relation(fields: [biodataId], references: [id])
+}
+
+model RiwayatPekerjaan {
+  id        Int     @id @default(autoincrement())
+  industry  String?
+  name      String?
+  salary    Int?
+  year      Int?
+  biodataId String
+  biodata   Biodata @relation(fields: [biodataId], references: [id])
+}
+
+enum GenderEnum {
+  UNKNOWN
+  MALE
+  FEMALE
+}
+
+enum RoleEnum {
+  USER
+  ADMIN
+}
