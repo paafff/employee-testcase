@@ -26,7 +26,7 @@ export class UserController {
     return await this.userService.findMany();
   }
 
-  @UseGuards(JwtGuard)
+  // @UseGuards(JwtGuard)
   @ApiBearerAuth()
   @Get(':id')
   @ApiOperation({ summary: 'Get a user by ID' })
@@ -37,7 +37,7 @@ export class UserController {
     return await this.userService.findOne(id);
   }
 
-  @UseGuards(JwtGuard)
+  // @UseGuards(JwtGuard)
   @ApiBearerAuth()
   @Patch(':id')
   @ApiOperation({ summary: 'Update a user by ID' })

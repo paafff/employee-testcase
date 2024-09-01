@@ -30,21 +30,6 @@ export class UserService {
       },
     });
 
-    // if (createdUser.role === 'MANAGER') {
-    //   await this.prisma.manager.create({
-    //     data: {
-    //       id: createdUser.id,
-    //     },
-    //   });
-    // }
-    // if (createdUser.role === 'OWNER') {
-    //   await this.prisma.owner.create({
-    //     data: {
-    //       id: createdUser.id,
-    //     },
-    //   });
-    // }
-
     return createdUser;
   }
 
@@ -66,6 +51,15 @@ export class UserService {
     return await this.prisma.user.findUnique({
       where: {
         id: id,
+      },
+      include: {
+        biodata: {
+          include: {
+            pendidikanTerakhir: true,
+            riwayatPekerjaan: true,
+            riwayatPelatihan: true,
+          },
+        },
       },
     });
   }

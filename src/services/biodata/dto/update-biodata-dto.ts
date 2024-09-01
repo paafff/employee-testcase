@@ -1,15 +1,110 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { GenderEnum } from '@prisma/client';
-import { IsOptional, IsString, IsEmail } from 'class-validator';
+import {
+  IsOptional,
+  IsString,
+  IsEmail,
+  IsArray,
+  ValidateNested,
+} from 'class-validator';
+import { Type } from 'class-transformer';
 
-export class UpdateBiodataDto {
+class PendidikanTerakhirDto {
   @IsOptional()
   @ApiProperty({
-    example: '12345',
-    description: 'Unique identifier for the biodata',
+    example: 'Bachelor of Science',
+    description: 'Education level',
   })
-  id?: string;
+  educationLevel?: string;
 
+  @IsOptional()
+  @ApiProperty({
+    example: 'University of Example',
+    description: 'Name of the institution',
+  })
+  name?: string;
+
+  @IsOptional()
+  @ApiProperty({
+    example: 'informatics',
+    description: 'Major field of study',
+  })
+  major?: string;
+
+  @IsOptional()
+  @ApiProperty({
+    example: 2015,
+    description: 'Year of graduation',
+  })
+  graduationYear?: number;
+}
+
+class RiwayatPelatihanUpdateDto {
+  @ApiProperty({
+    example: 'Tech Corp',
+    description: 'Industry of the job',
+  })
+  id: number;
+
+  @IsOptional()
+  @ApiProperty({
+    example: 'Advanced Software Engineering',
+    description: 'Name of the training',
+  })
+  name?: string;
+
+  @IsOptional()
+  @ApiProperty({
+    example: 'yes',
+    description: 'Whether a certificate was obtained',
+  })
+  certificate?: string;
+
+  @IsOptional()
+  @ApiProperty({
+    example: 2018,
+    description: 'Year of the training',
+  })
+  year?: number;
+}
+
+class RiwayatPekerjaanUpdateDto {
+  @ApiProperty({
+    example: 'Tech Corp',
+    description: 'Industry of the job',
+  })
+  id: number;
+
+  @IsOptional()
+  @ApiProperty({
+    example: 'Tech Corp',
+    description: 'Industry of the job',
+  })
+  industry?: string;
+
+  @IsOptional()
+  @ApiProperty({
+    example: 'Junior Developer',
+    description: 'Name of the job position',
+  })
+  name?: string;
+
+  @IsOptional()
+  @ApiProperty({
+    example: 9191,
+    description: 'Salary for the job',
+  })
+  salary?: number;
+
+  @IsOptional()
+  @ApiProperty({
+    example: 2002,
+    description: 'Year of employment',
+  })
+  year?: number;
+}
+
+export class UpdateBiodataDto {
   @IsOptional()
   @ApiProperty({
     example: 'Software Engineer',
@@ -61,4 +156,37 @@ export class UpdateBiodataDto {
     format: 'email',
   })
   email?: string;
+
+  @IsOptional()
+  @ValidateNested()
+  @Type(() => PendidikanTerakhirDto)
+  @ApiProperty({
+    description: 'Last education details',
+    type: PendidikanTerakhirDto,
+  })
+  pendidikanTerakhir?: {
+    update: PendidikanTerakhirDto;
+  };
+
+  @IsOptional()
+  @ValidateNested({ each: true })
+  @Type(() => RiwayatPelatihanUpdateDto)
+  @ApiProperty({
+    description: 'Training history update',
+    type: [RiwayatPelatihanUpdateDto],
+  })
+  riwayatPelatihan?: {
+    update: RiwayatPelatihanUpdateDto[];
+  };
+
+  @IsOptional()
+  @ValidateNested({ each: true })
+  @Type(() => RiwayatPekerjaanUpdateDto)
+  @ApiProperty({
+    description: 'Job history update',
+    type: [RiwayatPekerjaanUpdateDto],
+  })
+  riwayatPekerjaan?: {
+    update: RiwayatPekerjaanUpdateDto[];
+  };
 }

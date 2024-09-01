@@ -25,7 +25,7 @@ model User {
 
 model Biodata {
   id                 String              @id
-  user               User                @relation(fields: [id], references: [id])
+  user               User                @relation(fields: [id], references: [id], onDelete: Cascade)
   positionApplied    String?
   fullName           String?
   gender             GenderEnum          @default(UNKNOWN)
@@ -45,7 +45,7 @@ model PendidikanTerakhir {
   major          String?
   graduationYear Int?
   biodataId      String  @unique
-  biodata        Biodata @relation(fields: [biodataId], references: [id])
+  biodata        Biodata @relation(fields: [biodataId], references: [id], onDelete: Cascade)
 }
 
 model RiwayatPelatihan {
@@ -54,7 +54,7 @@ model RiwayatPelatihan {
   certificate String?
   year        Int?
   biodataId   String
-  biodata     Biodata @relation(fields: [biodataId], references: [id])
+  biodata     Biodata @relation(fields: [biodataId], references: [id], onDelete: Cascade)
 }
 
 model RiwayatPekerjaan {
@@ -64,7 +64,7 @@ model RiwayatPekerjaan {
   salary    Int?
   year      Int?
   biodataId String
-  biodata   Biodata @relation(fields: [biodataId], references: [id])
+  biodata   Biodata @relation(fields: [biodataId], references: [id], onDelete: Cascade)
 }
 
 enum GenderEnum {

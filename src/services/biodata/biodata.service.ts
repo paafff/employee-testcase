@@ -9,6 +9,8 @@ export class BiodataService {
   constructor(private prisma: PrismaService) {}
 
   async createBiodata(data: CreateBiodataDto): Promise<Biodata> {
+    console.log('🚀 ~ BiodataService ~ createBiodata ~ data:', data);
+
     return this.prisma.biodata.create({
       data,
     });
@@ -25,9 +27,37 @@ export class BiodataService {
   }
 
   async updateBiodata(id: string, data: UpdateBiodataDto): Promise<Biodata> {
+    const updateData: any = {
+      ...data,
+    };
+
+    if (data.pendidikanTerakhir) {
+      updateData.pendidikanTerakhir = {
+        update: data.pendidikanTerakhir.update,
+      };
+    }
+
+    if (data.riwayatPelatihan) {
+      updateData.riwayatPelatihan = {
+        updateMany: data.riwayatPelatihan.update.map((pelatihan) => ({
+          where: { id: pelatihan.id },
+          data: pelatihan,
+        })),
+      };
+    }
+
+    if (data.riwayatPekerjaan) {
+      updateData.riwayatPekerjaan = {
+        updateMany: data.riwayatPekerjaan.update.map((pekerjaan) => ({
+          where: { id: pekerjaan.id },
+          data: pekerjaan,
+        })),
+      };
+    }
+
     return this.prisma.biodata.update({
       where: { id },
-      data,
+      data: updateData,
     });
   }
 

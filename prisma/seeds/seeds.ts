@@ -20,7 +20,7 @@ export async function Seeds() {
       id: faker.string.uuid(),
       email: faker.internet.email(),
       password: hashedPassword,
-      role: RoleEnum.USER,
+      role: faker.helpers.objectValue(RoleEnum),
     };
   });
 

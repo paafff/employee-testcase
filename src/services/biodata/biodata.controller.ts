@@ -65,7 +65,7 @@ export class BiodataController {
     description: 'The biodata has been successfully deleted.',
   })
   @ApiResponse({ status: 404, description: 'Biodata not found.' })
-  async remove(@Param('id') id: string): Promise<Biodata> {
+  async delete(@Param('id') id: string): Promise<Biodata> {
     return this.biodataService.deleteBiodata(id);
   }
 }
